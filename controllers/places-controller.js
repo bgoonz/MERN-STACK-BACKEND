@@ -15,6 +15,7 @@ let DUMMY_PLACES = [
     creator: "u1",
   },
 ];
+//------------------Get Place By Id------------------
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; //{pid:'p1'}
   const place = DUMMY_PLACES.find((p) => {
@@ -26,7 +27,7 @@ const getPlaceById = async (req, res, next) => {
 
   res.json({ place: place });
 };
-
+//------------------Get Places By User Id------------------
 const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   const places = DUMMY_PLACES.filter((p) => {
@@ -39,7 +40,7 @@ const getPlacesByUserId = async (req, res, next) => {
   }
   res.json({ places });
 };
-
+//------------------Create Place------------------
 const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -66,6 +67,7 @@ const createPlace = async (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 };
 
+//------------------Update Place------------------
 const updatePlace = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -80,7 +82,7 @@ const updatePlace = (req, res, next) => {
   DUMMY_PLACES[placeIndex] = updatedPlace;
   res.status(200).json({ place: updatedPlace });
 };
-
+//------------------Delete Place------------------
 const deletePlaceById = (req, res, next) => {
   const placeId = req.params.pid;
   if (!DUMMY_PLACES.find((p) => p.id === placeId)) {
