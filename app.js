@@ -5,6 +5,8 @@ const placesRoutes = require("./routes/places-routes");
 
 const app = express();
 
+app.use(bodyParser.json());
+
 app.use("/api/places", placesRoutes); // => /api/places/...
 
 // this error handling middleware will exicute if any middleware above it throws an error
