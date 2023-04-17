@@ -35,7 +35,7 @@ const getPlacesByUserId = async (req, res, next) => {
       HttpError("Could not find a places for the provided user-id.", 404)
     );
   }
-  res.json({ places});
+  res.json({ places });
 };
 
 const createPlace = (req, res, next) => {
@@ -52,21 +52,21 @@ const createPlace = (req, res, next) => {
   res.status(201).json({ place: createdPlace });
 };
 
-const updatePlaceById = ( req, res, next ) => {
-    const { title, description } = req.body;
-    const placeId = req.params.pid;
-    const updatedPlace = { ...DUMMY_PLACES.find( p => p.id === placeId ) };
-    const placeIndex = DUMMY_PLACES.findIndex( p => p.id === placeId );
-    updatedPlace.title = title;
-    updatedPlace.description = description;
-    DUMMY_PLACES[ placeIndex ] = updatedPlace;
-    res.status( 200 ).json( { place: updatedPlace } );
+const updatePlaceById = (req, res, next) => {
+  const { title, description } = req.body;
+  const placeId = req.params.pid;
+  const updatedPlace = { ...DUMMY_PLACES.find((p) => p.id === placeId) };
+  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
+  updatedPlace.title = title;
+  updatedPlace.description = description;
+  DUMMY_PLACES[placeIndex] = updatedPlace;
+  res.status(200).json({ place: updatedPlace });
 };
 
-const deletePlaceById = ( req, res, next ) => {
-    const placeId = req.params.pid;
-    DUMMY_PLACES = DUMMY_PLACES.filter( p => p.id !== placeId );
-    res.status( 200 ).json( { message: "Deleted place."} );
+const deletePlaceById = (req, res, next) => {
+  const placeId = req.params.pid;
+  DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
+  res.status(200).json({ message: "Deleted place." });
 };
 
 exports.getPlaceById = getPlaceById;
@@ -74,4 +74,3 @@ exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
 exports.updatePlaceById = updatePlaceById;
 exports.deletePlaceById = deletePlaceById;
-

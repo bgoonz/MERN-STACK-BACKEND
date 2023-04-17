@@ -6,9 +6,8 @@ const createPlace = require("../controllers/places-controller").createPlace;
 const updatePlaceById =
   require("../controllers/places-controller").updatePlaceById;
 const deletePlaceById =
-    require( "../controllers/places-controller" ).deletePlaceById;
-  
-    
+  require("../controllers/places-controller").deletePlaceById;
+
 const router = express.Router();
 
 router.get("/:pid", getPlaceById);
