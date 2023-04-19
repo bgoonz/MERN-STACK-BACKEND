@@ -1,5 +1,5 @@
-const { validationResult } = require( "express-validator" );
-const mongoose = require( "mongoose" );
+const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
@@ -164,6 +164,8 @@ const deletePlaceById = async (req, res, next) => {
 
   let place;
   try {
+    //populate allows us to refer to a document stored in another collection
+    place = await Place.findById(placeId).populate("creator");
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not delete place.",
@@ -171,9 +173,19 @@ const deletePlaceById = async (req, res, next) => {
     );
     return next(error);
   }
+  if (!place) {
+    const error = new HttpError("Could not find place for this id.", 404);
+    return next(error);
+  }
 
   try {
-    await place.deleteOne();
+    // await place.deleteOne();
+    const curSession = await mongoose.startSession();
+    curSession.startTransaction();
+    await place.deleteOne({ session: curSession });
+    place.creator.places.pull(place);
+    await place.creator.save({ session: curSession });
+    await curSession.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not delete (remove) place.",
