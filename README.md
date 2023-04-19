@@ -21,3 +21,23 @@ tables and records (SQL) are called collections and documents in NoSQL
 mongodb+srv://bgoonz:Ruletheweb2023!@cluster0.tf5ehoc.mongodb.net/?retryWrites=true&w=majority
 
 https://cloud.mongodb.com/v2/643dc6f4d31bc92e7f8dc9b6#/metrics/replicaSet/643dc73e81f8fc67caa856d3/explorer/test
+
+
+
+### Application Data:
+
+**Users**
+- name
+- email
+- password
+- image
+
+**Places**
+- title
+- description
+- address
+- Location
+- image
+
+
+- One user can create multiple places and one place can be created by only a single user.
