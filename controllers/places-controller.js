@@ -1,7 +1,9 @@
-const { validationResult } = require("express-validator");
+const { validationResult } = require( "express-validator" );
+const mongoose = require( "mongoose" );
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
+const User = require("../models/user");
 let DUMMY_PLACES = [
   {
     id: "p1",
@@ -89,11 +91,32 @@ const createPlace = async (req, res, next) => {
       "https://upload.wikimedia.org/wikipedia/commons/1/10/Empire_State_Building_%28aerial_view%29.jpg",
     creator,
   });
+  let user;
   try {
-    await createdPlace.save();
-  } catch (err) {
+    user = await User.findById(creator);
+  } catch {
     const error = new HttpError(
       "Creating place failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id.", 404);
+    return next(error);
+  }
+  console.log(user);
+  try {
+    const curSession = await mongoose.startSession();
+    curSession.startTransaction();
+    await createdPlace.save({ session: curSession });
+    user.places.push(createdPlace);
+    //save updated user
+    await user.save({ session: curSession });
+    await curSession.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating place failed, either data base server is down or database validation failed.",
       500
     );
     return next(error);
