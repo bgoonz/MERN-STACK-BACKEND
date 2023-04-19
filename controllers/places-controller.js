@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Place = require("../models/place");
-
 let DUMMY_PLACES = [
   {
     id: "p1",
@@ -32,7 +31,6 @@ const getPlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-
   //if we don't have a place with the id
   if (!place) {
     const error = new HttpError(
@@ -41,7 +39,6 @@ const getPlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-
   res.json({ place: place.toObject({ getters: true }) });
 };
 
@@ -59,7 +56,6 @@ const getPlacesByUserId = async (req, res, next) => {
     );
     return next(error);
   }
-
   if (!places || places.length === 0) {
     return next(
       new HttpError("Could not find a places for the provided user-id.", 404)
@@ -75,7 +71,6 @@ const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
-
     next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
   const { title, description, address, creator } = req.body;
@@ -114,7 +109,6 @@ const updatePlace = async (req, res, next) => {
   }
   const { title, description } = req.body;
   const placeId = req.params.pid;
-
   let place;
   try {
     place = await Place.findById(placeId);
@@ -125,10 +119,8 @@ const updatePlace = async (req, res, next) => {
     );
     return next(error);
   }
-
   place.title = title;
   place.description = description;
-
   try {
     await place.save();
   } catch (err) {
@@ -138,17 +130,34 @@ const updatePlace = async (req, res, next) => {
     );
     return next(error);
   }
-
   res.status(200).json({ place: place.toObject({ getters: true }) });
 };
 
 //------------------Delete Place------------------
-const deletePlaceById = (req, res, next) => {
+const deletePlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
-  if (!DUMMY_PLACES.find((p) => p.id === placeId)) {
-    throw new HttpError("Could not find a place for that id.", 404);
+
+  let place;
+  try {
+    place = await Place.findById(placeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete place.",
+      500
+    );
+    return next(error);
   }
-  DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
+
+  try {
+    await place.deleteOne();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete (remove) place.",
+      500
+    );
+    return next(error);
+  }
+
   res.status(200).json({ message: "Deleted place." });
 };
 
