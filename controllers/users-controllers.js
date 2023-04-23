@@ -1,4 +1,3 @@
-
 const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("../models/user");
@@ -52,7 +51,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: "https://avatars.githubusercontent.com/u/66654881?v=4",
+    image: req.file.path,
     password,
     places: [],
   });
@@ -88,7 +87,10 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ message: "Logged in!", user: existingUser.toObject({ getters: true }) });
+  res.json({
+    message: "Logged in!",
+    user: existingUser.toObject({ getters: true }),
+  });
 };
 
 exports.getUsers = getUsers;

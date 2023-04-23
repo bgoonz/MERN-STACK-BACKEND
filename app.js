@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
-const HttpError = require("./models/http-error");
+const HttpError = require( "./models/http-error" );
+const fs = require( 'fs' );
 
 const app = express();
 
@@ -32,6 +33,12 @@ app.use((req, res, next) => {
 // this error handling middleware will exicute if any middleware above it throws an error
 app.use((error, req, res, next) => {
   //if response has already been sent
+    if ( req.file ) {
+        //if there is an error and a file was uploaded, delete the file
+        fs.unlink( req.file.path, ( err ) => {
+            console.log( err );
+        } );
+    }
   if (res.headerSent) {
     return next(error);
   }
