@@ -8,12 +8,19 @@ const updatePlace = require("../controllers/places-controller").updatePlace;
 const deletePlaceById =
   require("../controllers/places-controller").deletePlaceById;
 const fileUpload = require("../middleware/file-upload");
+const checkAuth = require( "../middleware/check-auth" );
 
+
+
+
+//-------Routes--------------------------------
 const router = express.Router();
 
 router.get("/:pid", getPlaceById);
 
-router.get("/user/:uid", getPlacesByUserId);
+router.get( "/user/:uid", getPlacesByUserId );
+//every route before this one is open to everyone... after this one is authenticated
+router.use( checkAuth)
 
 router.post(
   "/",
