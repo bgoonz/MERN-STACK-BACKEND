@@ -18,11 +18,11 @@ const fileUpload = multer( {
         }
     } ),
     fileFilter: ( req, file, cb ) => {
-        if ( file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ) {
-            cb( null, true );
-        } else {
-            cb( new Error( 'Invalid mime type, only JPEG and PNG' ), false );
-        }
+        // the !! converts undefined to false and a value to true
+        const isValid = !!MIME_TYPE_MAP[file.mimetype];
+        let error = isValid ? null : new Error( 'Invalid mime type!' );
+        cb( error, isValid );
+        
     }
     
     
