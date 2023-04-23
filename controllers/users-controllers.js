@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
-const User = require("../models/user");
+const User = require( "../models/user" );
+const bcrypt = require( "bcryptjs" );
 
 //------------------Get Users------------------
 const getUsers = async (req, res, next) => {
@@ -18,7 +19,7 @@ const getUsers = async (req, res, next) => {
   res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
-//------------------Signup------------------
+//------------------Signup-(Create User)-----------------
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -48,11 +49,24 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash( password, 12 );
+    } catch ( err ) {
+        const error = new HttpError(
+            'Could not create user, error hashing password.',
+            500
+        );
+        return next( error );
+    }
+    
+        
+    
   const createdUser = new User({
     name,
     email,
     image: req.file.path,
-    password,
+    password: hashedPassword,
     places: [],
   });
   try {
