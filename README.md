@@ -40,3 +40,36 @@ https://cloud.mongodb.com/v2/643dc6f4d31bc92e7f8dc9b6#/metrics/replicaSet/643dc7
 - image
 
 - One user can create multiple places and one place can be created by only a single user.
+
+
+---
+
+
+##### Authentication
+
+**Hashing Passwords (done one backend)**
+
+```bash
+npm install bcryptjs
+```
+
+> in the code below `hashedPassword = await bcrypt.hash( password, 12 );` 12 is the number of rounds of hashing (salting) we want to do. the more rounds the more secure the password but the longer it takes to hash the password.
+```js
+  let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash( password, 12 );
+    } catch ( err ) {
+        const error = new HttpError(
+            'Could not create user, error hashing password.',
+            500
+        );
+        return next( error );
+    }
+    
+
+```
+
+
+
+
+
