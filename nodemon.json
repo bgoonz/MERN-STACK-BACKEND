@@ -1,0 +1,10 @@
+{
+    "env":{
+        "DB_User": "bgoonz",
+        "DB_Password": "Ruletheweb2023!",
+        "DB_Name": "mern",
+        "Google_Api_Key": "AIzaSyCqEAyCWnRM3KZTn0duEveWpW-JxZ19Sbs",
+        "JWT_KEY": "supersecret_dont_share"
+    }
+    
+}

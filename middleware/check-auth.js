@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
       const error = new HttpError("Authentication failed.");
     }
     //validating the token
-    const decodedToken = jwt.verify(token, "supersecret_dont_share");
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
     //add data to the request
     req.userData = { userId: decodedToken.userId };
     //let request continue
