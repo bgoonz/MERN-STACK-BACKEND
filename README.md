@@ -12,6 +12,7 @@
 
 #### SQL vs NoSQL
 
+
 tables and records (SQL) are called collections and documents in NoSQL
 
 - SQL: Relational Databases (MySQL, Postgres, SQLite, Oracle, Microsoft SQL Server) _enforces strict data schema_ **Relations are a core feature... Records are related**
